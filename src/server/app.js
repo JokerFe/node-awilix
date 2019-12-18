@@ -5,6 +5,7 @@ import render from "koa-swig";
 import co from "co";
 import { asClass, asValue, Lifetime, createContainer } from "awilix";
 import { scopePerRequest, loadControllers } from "awilix-koa";
+import { historyApiFallback } from "koa2-connect-history-api-fallback";
 import { port, staticDir, viewDir } from "./config/config";
 import log4js from "log4js";
 import errorHandler from "./utils/ErrorHandle";
@@ -31,6 +32,9 @@ app.use(loadControllers(__dirname + "/controller/*.js"), {
 	cwd: __dirname
 });
 
+// koa2的一个中间件，用于处理vue-router使用history模式返回index.html，让koa2支持SPA应用程序。
+app.use(historyApiFallback({ whiteList: ["/index", "/blog"] }));
+
 //前端模板
 //co的作用是把 *函数全部自动向下执行 next -> next -> done
 //async await 语法糖版本 koa-swig 并为KOA2 升级 KOA1
@@ -38,7 +42,6 @@ app.context.render = co.wrap(
 	render({
 		root: viewDir,
 		autoescape: true,
-		// cache: 'memory', // disable, set to false
 		cache: false,
 		varControls: ["[[", "]]"],
 		ext: "html",
@@ -68,5 +71,6 @@ app.use(serve(staticDir));
 
 // 启动3000端口
 app.listen(port, () => {
+	// log4js.info(`Jokul | awilix-serve 已启动在${port}端口`);
 	console.log(`Jokul | awilix-serve 已启动在${port}端口`);
 });
