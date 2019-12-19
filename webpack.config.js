@@ -1,7 +1,13 @@
 const path = require("path");
 const VueLoaderPlugin = require("vue-loader/lib/plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const webpackConfig = {
+const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
+const smp = new SpeedMeasurePlugin();
+const ProgressBarPlugin = require("progress-bar-webpack-plugin");
+const DashboardPlugin = require("webpack-dashboard/plugin");
+const ManifestPlugin = require("webpack-manifest-plugin");
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
+const webpackConfig = smp.wrap({
 	// 入口文件
 	entry: `${__dirname}/src/webapp/app.js`,
 	// 输出文件路径和格式
@@ -9,6 +15,13 @@ const webpackConfig = {
 		path: path.join(__dirname, "dist/assets"),
 		publicPath: "/",
 		filename: "scripts/[name].bundle.js"
+	},
+	optimization: {
+		minimizer: [
+			new UglifyJsPlugin({
+				parallel: true
+			})
+		]
 	},
 	resolve: {
 		alias: {
@@ -72,8 +85,11 @@ const webpackConfig = {
 		new HtmlWebpackPlugin({
 			filename: path.join(__dirname, "dist/views/index.html"),
 			template: "src/webapp/index.html"
-		})
+		}),
+		new ProgressBarPlugin(),
+		new DashboardPlugin(),
+		new ManifestPlugin()
 	]
-};
+});
 
 module.exports = webpackConfig;
