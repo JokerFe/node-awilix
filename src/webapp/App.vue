@@ -10,10 +10,10 @@
 	height: 100vh;
 	background-color: black;
 	color: yellowgreen;
-
-	& .app-link {
-		color: aquamarine;
-		text-decoration: none;
-	}
+}
+/* 测试 *//* 测试 *//* 测试 *//* 测试 *//* 测试 *//* 测试 *//* 测试 *//* 测试 *//* 测试 */
+.app-link {
+	color: aquamarine;
+	text-decoration: none;
 }
 </style>

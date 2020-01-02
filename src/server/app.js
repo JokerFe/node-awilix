@@ -33,7 +33,7 @@ app.use(loadControllers(__dirname + "/controller/*.js"), {
 });
 
 // koa2的一个中间件，用于处理vue-router使用history模式返回index.html，让koa2支持SPA应用程序。
-app.use(historyApiFallback({ whiteList: ["/index", "/blog"] }));
+app.use(historyApiFallback({ whiteList: ["/","/index", "/blog"] }));
 
 //前端模板
 //co的作用是把 *函数全部自动向下执行 next -> next -> done
